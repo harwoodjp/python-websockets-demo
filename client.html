@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+    <head></head>
+    <body>
+        <textarea></textarea>
+        <button onclick="send()">Send</button>
+        <div class="logs" style="display: flex; flex-direction: column;">
+        </div>
+        <script>
+            var ws = new WebSocket("ws://localhost:8001/");
+
+            const send = () => {
+                const textArea = document.querySelector("textarea")
+                const message = textArea.value
+                ws.send(`[client.html] ${message}`)                
+                textArea.value = ""
+            }
+
+            ws.addEventListener("open", ev => {
+                console.log("opened websocket ", ev)
+            })
+
+            ws.addEventListener("message", ev => {
+                console.log("message via websocket ", ev.data)
+                document.querySelector(".logs").innerHTML += `<span>${ev.data}</span>`
+            })
+        </script>
+    </body>
+</html>
